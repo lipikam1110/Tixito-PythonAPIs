@@ -20,17 +20,19 @@ SECRET_KEY = generate_secret_key()
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    username = data.get('username')
+    username = data.get('name')
     email = data.get('email')
     mobile = data.get('mobile')
-    whatsapp_notification_enabled = data.get('whatsappNotificationEnabled', False)
+    # whatsapp_notification_enabled = bool(data.get('whatsappNotificationEnable'))
+    whatsapp_notification_enable = data.get('whatsappNotificationEnable')
+    print(type(whatsapp_notification_enable))
 
     # Check if email format is valid
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return jsonify({'status': 'failed', 'message': 'Invalid email format'}), 400
 
     # Check if user already exists by username, email, or mobile number
-    user_by_username = User.query.filter_by(username=username).first()
+    user_by_username = User.query.filter_by(name=username).first()
     user_by_email = User.query.filter_by(email=email).first()
     user_by_mobile = User.query.filter_by(mobile=mobile).first()
 
@@ -44,7 +46,8 @@ def signup():
         return jsonify({'status': 'failed', 'message': 'Mobile number already exists'}), 409
 
     # Create a new user
-    new_user = User(username=username, email=email, mobile=mobile, whatsapp_notification_enabled=whatsapp_notification_enabled)
+    # new_user = User(name=username, email=email, mobile=mobile, whatsapp_notification_enabled=whatsapp_notification_enabled)
+    new_user = User(name=username, email=email, mobile=mobile, whatsapp_notification_enable=whatsapp_notification_enable)
     db.session.add(new_user)
     db.session.commit()
 
@@ -87,7 +90,7 @@ def login():
 def generate_jwt_token(user):
     payload = {
         'user_id': user.id,
-        'username': user.username,
+        'username': user.name,
         'email': user.email,
         'exp': datetime.utcnow() + timedelta(days=1)  # Token expiry time
     }

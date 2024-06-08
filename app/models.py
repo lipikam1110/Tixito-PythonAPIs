@@ -7,7 +7,7 @@ class User(db.Model):
     name = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     mobile = db.Column(db.String(15), unique=True, nullable=False)
-    whatsapp_notification_enabled = db.Column(db.Boolean, default=False, nullable=False)
+    whatsapp_notification_enable = db.Column(db.Boolean, default=False, nullable=False)
 
     __table_args__ = (
         CheckConstraint("email LIKE '%@%.%'"),
