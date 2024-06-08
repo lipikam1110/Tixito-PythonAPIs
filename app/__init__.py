@@ -14,6 +14,6 @@ def create_app():
     migrate.init_app(app, db)
 
     from app.routes import auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(auth_bp, url_prefix='/Authentication')  # Adjusted URL prefix
 
     return app
