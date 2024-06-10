@@ -1,230 +1,263 @@
 from flask import Flask, request, jsonify
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import logging
+from flask_sqlalchemy import SQLAlchemy
+from flask_swagger_ui import get_swaggerui_blueprint
+from datetime import datetime
+
+
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={'app_name': "CRUD API"})
+
 
 app = Flask(__name__)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+#PostgreSQL database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mohin123@localhost:5432/mydb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Database connection
-def get_db_connection():
+# Initialize the database
+db = SQLAlchemy(app)
+
+# Define item model
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    description = db.Column(db.String(120), nullable=True)
+
+# Define Review model
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    review = db.Column(db.String(250), nullable=True)
+    user_id = db.Column(db.Integer, nullable=False)
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    about = db.Column(db.String(500), nullable=False)
+    age_criteria = db.Column(db.Integer, nullable=False)
+    category = db.Column(db.String(80), nullable=False)
+    city = db.Column(db.String(80), nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+    language = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+# Create the database tables
+with app.app_context():
+    db.create_all()
+
+'''
+# GET endpoint
+@app.route('/items', methods=['GET'])
+def get_items():
+    items = Item.query.all()
+    return jsonify([{'id': item.id, 'name': item.name, 'description': item.description} for item in items])
+
+# POST endpoint
+@app.route('/items', methods=['POST'])
+def create_item():
+    data = request.get_json()
+    new_item = Item(name=data['name'], description=data.get('description'))
+    db.session.add(new_item)
+    db.session.commit()
+    return jsonify({'id': new_item.id, 'name': new_item.name, 'description': new_item.description}), 201
+
+# PUT endpoint 
+@app.route('/items/<int:item_id>', methods=['PUT'])
+def update_item(item_id):
+    data = request.get_json()
+    item = Item.query.get_or_404(item_id)
+    item.name = data['name']
+    item.description = data.get('description', item.description)
+    db.session.commit()
+    return jsonify({'id': item.id, 'name': item.name, 'description': item.description})
+
+# DELETE endpoint 
+@app.route('/items/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id):
+    item = Item.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    return '', 204
+'''
+
+#Endpoint for review-----------------------------------------------------
+@app.route('/review', methods=['POST'])
+@app.route('/review', methods=['POST'])
+def create_review():
     try:
-        conn = psycopg2.connect(
-            dbname="tixito_db",
-            user="postgres",
-            password="345483",
-            host="localhost"
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'message': 'No input data provided',
+                'status': 'error'
+            }), 400
+
+        if 'orderId' not in data or 'rating' not in data or 'reviews' not in data or 'userID' not in data:
+            return jsonify({
+                'message': 'Missing required parameters',
+                'status': 'error'
+            }), 400
+
+        new_review = Review(
+            order_id=data['orderId'],
+            rating=data['rating'],
+            review=data['reviews'],
+            user_id=data['userID']
         )
-        return conn
-    except psycopg2.OperationalError as e:
-        app.logger.error(f"Operational error: {e}")
-        return None
-    except Exception as e:
-        app.logger.error(f"General error: {e}")
-        return None
 
-@app.route('/tickets', methods=['POST'])
-def create_ticket():
+        db.session.add(new_review)
+        db.session.commit()
+
+        return jsonify({
+            'data': {
+                'id': new_review.id,
+                'orderId': new_review.order_id,
+                'rating': new_review.rating,
+                'reviews': new_review.review,
+                'userID': new_review.user_id
+            },
+            'message': 'Review created successfully',
+            'status': 'success'
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            'message': str(e),
+            'status': 'error'
+        }), 500
+    
+@app.route('/review', methods=['POST'])
+def get_review():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'message': 'No input data provided',
+                'status': 'error'
+            }), 400
+
+        if 'orderId' not in data or 'rating' not in data or 'reviews' not in data or 'userID' not in data:
+            return jsonify({
+                'message': 'Missing required parameters',
+                'status': 'error'
+            }), 400
+
+        new_review = Review(
+            order_id=data['orderId'],
+            rating=data['rating'],
+            review=data['reviews'],
+            user_id=data['userID']
+        )
+
+        db.session.add(new_review)
+        db.session.commit()
+
+        return jsonify({
+            'data': {
+                'id': new_review.id,
+                'orderId': new_review.order_id,
+                'rating': new_review.rating,
+                'reviews': new_review.review,
+                'userID': new_review.user_id
+            },
+            'message': 'Review created successfully',
+            'status': 'success'
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            'message': str(e),
+            'status': 'error'
+        }), 500
+
+@app.route('/review/user/<int:id>', methods=['GET'])
+def get_user_reviews(id):
+    try:
+        if not isinstance(id, int):
+            return jsonify({
+                'message': 'Invalid user ID',
+                'status': 'error'
+            }), 400
+
+        reviews = Review.query.filter_by(user_id=id).all()
+        if not reviews:
+            return jsonify({
+                'message': 'No reviews found for the user',
+                'status': 'error'
+            }), 404
+
+        user_reviews = [{
+            'id': review.id,
+            'orderID': review.order_id,
+            'rating': review.rating,
+            'reviews': review.review,
+            'userID': review.user_id
+        } for review in reviews]
+
+        return jsonify({
+            'data': {
+                'userReviews': user_reviews
+            },
+            'message': 'User reviews retrieved successfully',
+            'status': 'success'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'message': str(e),
+            'status': 'error'
+        }), 500
+
+# POST endpoint for event----------------------------------------------------------------------
+@app.route('/event', methods=['POST'])
+def create_event():
     data = request.get_json()
+    new_event = Event(
+        about=data['about'],
+        age_criteria=data['ageCriteria'],
+        category=data['category'],
+        city=data['city'],
+        duration=data['duration'],
+        language=data['language'],
+        name=data['name'],
+        time=datetime.strptime(data['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    )
+    db.session.add(new_event)
+    db.session.commit()
+    return jsonify({
+        'id': new_event.id,
+        'about': new_event.about,
+        'ageCriteria': new_event.age_criteria,
+        'category': new_event.category,
+        'city': new_event.city,
+        'duration': new_event.duration,
+        'language': new_event.language,
+        'name': new_event.name,
+        'time': new_event.time.isoformat() + 'Z'
+    }), 201
 
-    if not data:
-        return jsonify({"error": "Bad Request: No data provided", "status_code": 400}), 400
-
-    actualPrice = data.get('actualPrice', 0)
-    comment = data.get('comment', '')
-    eventVenuesID = data.get('eventVenuesID', 0)
-    imageURL = data.get('imageURL', '')
-    listingPrice = data.get('listingPrice', 0)
-    lock = data.get('lock', False)
-    ordersID = data.get('ordersID', 0)
-    sellerID = data.get('sellerID', 0)
-    sellingPrice = data.get('sellingPrice', 0)
-    status = data.get('status', '')
-    type = data.get('type', '')
-    validatedOn = data.get('validatedOn')
-    verified = data.get('verified', False)
-
-    if not sellerID:
-        return jsonify({"error": "Unauthorized: No seller ID provided", "status_code": 401}), 401
-
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-    try:
-        cursor.execute("""
-            INSERT INTO tickets (actualPrice, comment, eventVenuesID, imageURL, listingPrice, lock, ordersID, sellerID, sellingPrice, status, type, validatedOn, verified)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING *;
-        """, (actualPrice, comment, eventVenuesID, imageURL, listingPrice, lock, ordersID, sellerID, sellingPrice, status, type, validatedOn, verified))
-
-        new_ticket = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        if new_ticket:
-            return jsonify({"data": new_ticket, "status_code": 201}), 201
-        else:
-            return jsonify({"error": "No Content: Ticket creation failed", "status_code": 204}), 204
-    except Exception as e:
-        app.logger.error(f"Error inserting ticket: {e}")
-        conn.rollback()
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 400}), 400
-
-
-@app.route('/tickets', methods=['GET'])
-def get_tickets():
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    try:
-        cursor.execute('SELECT * FROM tickets;')
-        tickets = cursor.fetchall()
-        cursor.close()
-        conn.close()
-
-        if not tickets:
-            return jsonify({"message": "No Content: No tickets found", "status_code": 204}), 204
-
-        return jsonify({"data": {"tickets": tickets}, "message": "success", "status": "ok", "status_code": 200}), 200
-    except Exception as e:
-        app.logger.error(f"Error fetching tickets: {e}")
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 500}), 500
-
-
-@app.route('/tickets/<int:ticket_id>', methods=['GET'])
-def get_ticket_by_id(ticket_id):
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    try:
-        cursor.execute('SELECT * FROM tickets WHERE id = %s;', (ticket_id,))
-        ticket = cursor.fetchone()
-        cursor.close()
-        conn.close()
-
-        if ticket:
-            return jsonify({"data": ticket, "status_code": 200}), 200
-        else:
-            return jsonify({"error": "Ticket not found", "status_code": 404}), 404
-    except Exception as e:
-        app.logger.error(f"Error fetching ticket by ID: {e}")
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 500}), 500
-
-
-@app.route('/tickets/<int:ticket_id>', methods=['DELETE'])
-def delete_ticket_by_id(ticket_id):
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    try:
-        cursor.execute('DELETE FROM tickets WHERE id = %s RETURNING *;', (ticket_id,))
-        deleted_ticket = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        if deleted_ticket:
-            return jsonify({"message": "Ticket deleted successfully", "data": deleted_ticket, "status_code": 200}), 200
-        else:
-            return jsonify({"error": "Ticket not found", "status_code": 404}), 404
-    except Exception as e:
-        app.logger.error(f"Error deleting ticket by ID: {e}")
-        conn.rollback()
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 500}), 500
-
-
-@app.route('/tickets/<int:ticket_id>/price', methods=['PATCH'])
-def update_ticket_price(ticket_id):
-    data = request.get_json()
-
-    if not data or 'price' not in data:
-        return jsonify({"error": "Bad Request: 'price' not provided", "status_code": 400}), 400
-
-    new_price = data['price']
-
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    try:
-        cursor.execute('UPDATE tickets SET sellingPrice = %s WHERE id = %s RETURNING *;', (new_price, ticket_id))
-        updated_ticket = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        if updated_ticket:
-            return jsonify({"message": "Ticket price updated successfully", "data": updated_ticket, "status_code": 200}), 200
-        else:
-            return jsonify({"error": "Ticket not found", "status_code": 404}), 404
-    except Exception as e:
-        app.logger.error(f"Error updating ticket price: {e}")
-        conn.rollback()
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 500}), 500
-
-
-@app.route('/tickets/<int:ticket_id>/validate', methods=['PATCH'])
-def validate_ticket(ticket_id):
-    data = request.get_json()
-
-    if not data or 'validatedOn' not in data:
-        return jsonify({"error": "Bad Request: 'validatedOn' not provided", "status_code": 400}), 400
-
-    validatedOn = data['validatedOn']
-
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({"error": "Database connection failed", "status_code": 500}), 500
-
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    try:
-        cursor.execute('UPDATE tickets SET validatedOn = %s WHERE id = %s RETURNING *;', (validatedOn, ticket_id))
-        updated_ticket = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        if updated_ticket:
-            return jsonify({"message": "Ticket validated successfully", "data": updated_ticket, "status_code": 200}), 200
-        else:
-            return jsonify({"error": "Ticket not found", "status_code": 404}), 404
-    except Exception as e:
-        app.logger.error(f"Error validating ticket: {e}")
-        conn.rollback()
-        cursor.close()
-        conn.close()
-        return jsonify({"error": str(e), "status_code": 500}), 500
-
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return jsonify({"error": "Not Found", "status_code": 404}), 404
-
-@app.errorhandler(500)
-def internal_error(e):
-    return jsonify({"error": "Internal Server Error", "status_code": 500}), 500
+# GET endpoint to retrieve all events
+@app.route('/event', methods=['GET'])
+def get_events():
+    events = Event.query.all()
+    event_list = [
+        {
+            'id': event.id,
+            'about': event.about,
+            'ageCriteria': event.age_criteria,
+            'category': event.category,
+            'city': event.city,
+            'duration': event.duration,
+            'language': event.language,
+            'name': event.name,
+            'time': event.time.isoformat() + 'Z'
+        }
+        for event in events
+    ]
+    return jsonify({'events': event_list, 'message': 'Events retrieved successfully', 'status': 'success'})
 
 if __name__ == '__main__':
     app.run(debug=True)
