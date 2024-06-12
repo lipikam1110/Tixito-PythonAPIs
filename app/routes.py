@@ -80,7 +80,8 @@ def login():
         response_data = {
             'status': 'success',
             'data': {
-                'token': jwt_token
+                'token': jwt_token,
+                'name': user.name
             }
         }
         return jsonify(response_data), 200
