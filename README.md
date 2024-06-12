@@ -1,29 +1,43 @@
-# AR-MAIN-PROJECT-DEMO
+# Tixito-PythonAPIs
 
 ## Overview
-This project is a demo for an Augmented Reality (AR) application, developed with Flask and SQLAlchemy. It includes user authentication, featuring sign-up and login functionalities with email and mobile number-based authentication.
+This project is a demo for an authentication system using Python, Flask, SQLAlchemy, and React. It includes user registration and login functionalities with email and mobile number-based authentication, and it interacts with a React frontend.
 
 ## Features
 - User Registration
 - User Login
 - Mobile number-based login
+- JWT Token generation for authenticated sessions
 
 ## Requirements
-- Postman Software For API & Python 3.x (Any IDE For Code)
-- Libraries of Python ↓
-  - Flask
-  - SQLAlchemy
-  - psycopg2
-  - bcrypt
+- Python 3.x
+- PostgreSQL
+- Node.js and npm for the React frontend
 
-## Installation
+### Python Libraries
+- Flask
+- Flask-CORS
+- SQLAlchemy
+- Flask-Migrate
+- psycopg2
+- jwt
+- bcrypt
+- python-dotenv
+
+### JavaScript Libraries
+- React
+- axios
+- react-router-dom
+- react-toastify
+
+## Backend Installation
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/senkushaIN/AR-MAIN-PROJECT-DEMO.git
-    cd AR-MAIN-PROJECT-DEMO
+    git clone https://github.com/lipikam1110/Tixito-PythonAPIs.git
+    cd Tixito-PythonAPIs
     ```
-   
+
 2. Create a virtual environment:
     ```sh
     python -m venv .venv
@@ -44,14 +58,12 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     pip install -r requirements.txt
     ```
 
-## Configuration
-
-1. Set up your PostgreSQL database and update the database URI in the configuration file (`config.py`):
+5. Set up your PostgreSQL database and update the database URI in the configuration file (`config.py`):
     ```python
     SQLALCHEMY_DATABASE_URI = 'postgresql://<username>:<password>@localhost/<dbname>'
     ```
 
-## Running the Application
+## Running the Backend Application
 
 1. Apply database migrations:
     ```sh
@@ -65,11 +77,27 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     flask run
     ```
 
+## Frontend Installation
+
+1. Navigate to the frontend directory:
+    ```sh
+    cd frontend
+    ```
+
+2. Install the required packages:
+    ```sh
+    npm install
+    ```
+
+3. Start the React application:
+    ```sh
+    npm start
+    ```
+
 ## API Endpoints
 
 ### Sign Up
-- **DEFAULT FLASK GENERATED URL:** `http://127.0.0.1:5000/signup`
-- **URL IF CUSTOMIZED IN CODE:** `http://127.0.0.1:5000/<customization as per code>/signup`
+- **URL:** `http://127.0.0.1:5001/Authentication/signup`
 - **Method:** `POST`
 - **Data Params:**
     ```json
@@ -77,7 +105,7 @@ This project is a demo for an Augmented Reality (AR) application, developed with
       "name": "your_username",
       "email": "your_email@example.com",
       "mobile": "your_mobile_number",
-      "whatsappNotificationEnabled": true
+      "whatsappNotificationEnable": true
     }
     ```
 - **Success Response:**
@@ -85,8 +113,7 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "message": "User Created Successfully",
-          "status": "Success",
+          "status": "success",
           "data": {
             "token": "<Encrypted Token>"
           }
@@ -97,7 +124,7 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "status": "Failed",
+          "status": "failed",
           "message": "Username already exists"
         }
         ```
@@ -105,7 +132,7 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "status": "Failed",
+          "status": "failed",
           "message": "Email already exists"
         }
         ```
@@ -113,14 +140,13 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "status": "Failed",
+          "status": "failed",
           "message": "Mobile number already exists"
         }
         ```
 
 ### Login
-- **DEFAULT FLASK GENERATED URL:** `http://127.0.0.1:5000/login`
-- **URL IF CUSTOMIZED IN CODE:** `http://127.0.0.1:5000/<customization as per code>/login`
+- **URL:** `http://127.0.0.1:5001/Authentication/login`
 - **Method:** `POST`
 - **Data Params:**
     ```json
@@ -134,8 +160,7 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "message": "Login Successfully",
-          "status": "Success",
+          "status": "success",
           "data": {
             "token": "<Encrypted Token>"
           }
@@ -146,8 +171,8 @@ This project is a demo for an Augmented Reality (AR) application, developed with
     - **Content:** 
         ```json
         {
-          "message": "Invalid credentials",
-          "status": "Failed"
+          "status": "failed",
+          "message": "Invalid credentials"
         }
         ```
 
