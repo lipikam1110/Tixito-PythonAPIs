@@ -1,0 +1,101 @@
+/* src/components/Form.css */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  color: #ecf0f1;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  background-color: #1f1f1f;
+  color: #ecf0f1;
+}
+
+.form-box input,
+.form-box button {
+  margin: 10px 0;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: #333;
+  color: #ecf0f1;
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.form-box input:focus,
+.form-box button:focus {
+  border-color: #11ff00;
+  outline: none;
+  box-shadow: 0 0 10px rgba(52, 219, 102, 0.5);
+}
+
+.form-box button {
+  background-color: #11ff00;
+  border: none;
+  cursor: pointer;
+}
+
+.form-box button:hover {
+  background-color: #12ff01a4;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the left */
+  width: 100%;
+  margin: 10px 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  color: #ecf0f1;
+}
+
+.checkbox-label input {
+  margin-right: 10px;
+}
+
+.checkbox-label .whatsapp-label {
+  margin-left: 5px; /* Adjust spacing between checkbox and label text */
+}
+
+.form-box a {
+  text-decoration: none;
+  color: #11ff00;
+  transition: color 0.3s;
+}
+
+.form-box a:hover {
+  text-decoration: underline;
+  color: #5fd380; /* Lighter shade of green on hover */
+}
+
+/* Toastify CSS */
+.Toastify__toast--success {
+  background-color: #11ff00;
+  color: #ecf0f1; /* Text color for success */
+}
+
+.Toastify__toast--error {
+  background-color: #e74c3c;
+  color: #ecf0f1; /* Text color for error */
+}

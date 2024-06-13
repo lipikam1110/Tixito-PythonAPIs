@@ -1,0 +1,56 @@
+/* src/components/Nav.css */
+.nav-bar {
+  background-color: #1f1f1f;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid #2f2f2f;
+}
+
+.nav-list {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0 15px;
+  position: relative;
+}
+
+.nav-item a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.nav-item.selected a,
+.nav-item a:hover {
+  color: #11ff00;
+}
+
+.nav-item.selected a::after,
+.nav-item a:hover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #26ff0081;
+}
+
+.logout-button {
+  background: none;
+  color: #ecf0f1;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.logout-button:hover {
+  color: #11ff00;
+}
