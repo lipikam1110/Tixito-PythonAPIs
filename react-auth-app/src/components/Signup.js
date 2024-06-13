@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import './Form.css';  // Updated to import the common Form.css
+import { motion } from 'framer-motion';
+import './Form.css'; // Updated to import the common Form.css
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -34,41 +35,64 @@ const Signup = () => {
   };
 
   return (
-    <div className="form-container">
+    <motion.div
+      className="form-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h2>Signup</h2>
-      <form onSubmit={handleSignup} className="form-box">
-        <input
+      <motion.form
+        onSubmit={handleSignup}
+        className="form-box"
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 100 }}
+      >
+        <motion.input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
           required
+          whileFocus={{ scale: 1.05 }}
         />
-        <input
+        <motion.input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
+          whileFocus={{ scale: 1.05 }}
         />
-        <input
+        <motion.input
           type="text"
           value={mobile}
           onChange={(e) => setMobile(e.target.value)}
           placeholder="Mobile"
           required
+          whileFocus={{ scale: 1.05 }}
         />
-        <label>
-          <input
-            type="checkbox"
-            checked={whatsappNotificationEnable}
-            onChange={(e) => setWhatsappNotificationEnable(e.target.checked)}
-          />
-          Enable WhatsApp Notifications
-        </label>
-        <button type="submit">Signup</button>
-      </form>
-    </div>
+        <div className="checkbox-container">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={whatsappNotificationEnable}
+              onChange={(e) => setWhatsappNotificationEnable(e.target.checked)}
+            />
+            <span className="whatsapp-label">Enable WhatsApp Notifications</span>
+          </label>
+        </div>
+        <motion.button
+          type="submit"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          Signup
+        </motion.button>
+      </motion.form>
+    </motion.div>
   );
 };
 

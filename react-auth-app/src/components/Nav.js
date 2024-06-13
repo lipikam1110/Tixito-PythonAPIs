@@ -1,11 +1,17 @@
-// src/components/Nav.js
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 import './Nav.css';
 
 const Nav = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [selected, setSelected] = useState(location.pathname);
+
+  useEffect(() => {
+    setSelected(location.pathname);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     const token = localStorage.getItem('token');
@@ -18,20 +24,40 @@ const Nav = () => {
     navigate('/login');
   };
 
+  const handleSelect = (path) => {
+    setSelected(path);
+  };
+
   return (
-    <nav className="nav-bar">
+    <motion.nav className="nav-bar">
       <ul className="nav-list">
-        <li className="nav-item">
-          <Link to="/login">Login</Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/signup">Signup</Link>
-        </li>
-        <li className="nav-item">
-          <button onClick={handleLogout} className="logout-button">Logout</button>
-        </li>
+        <motion.li 
+          className={`nav-item ${selected === '/login' ? 'selected' : ''}`}
+          whileHover={{ scale: 1.1 }}
+        >
+          <Link to="/login" onClick={() => handleSelect('/login')}>Login</Link>
+        </motion.li>
+        <motion.li 
+          className={`nav-item ${selected === '/signup' ? 'selected' : ''}`}
+          whileHover={{ scale: 1.1 }}
+        >
+          <Link to="/signup" onClick={() => handleSelect('/signup')}>Signup</Link>
+        </motion.li>
+        <motion.li 
+          className="nav-item"
+          whileHover={{ scale: 1.1 }}
+        >
+          <motion.button 
+            onClick={handleLogout} 
+            className="logout-button"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            Logout
+          </motion.button>
+        </motion.li>
       </ul>
-    </nav>
+    </motion.nav>
   );
 };
 
