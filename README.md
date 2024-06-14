@@ -1,98 +1,70 @@
-# TIXITO
+# Getting Started with Create React App
 
-## RS_TICKET
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### Description
+## Available Scripts
 
-This pull request introduces a comprehensive set of API endpoints for managing tickets within the Tixito-PythonAPIs project. The following features and functionalities have been implemented:
+In the project directory, you can run:
 
-### Features
+### `npm start`
 
-1. **Create Ticket Endpoint**
-   - **URL**: `/tickets`
-   - **Method**: `POST`
-   - **Description**: Allows users to create a new ticket by providing necessary details such as `actualPrice`, `comment`, `eventVenuesID`, `imageURL`, `listingPrice`, `lock`, `ordersID`, `sellerID`, `sellingPrice`, `status`, `type`, `validatedOn`, and `verified`.
-   - **Error Handling**: Returns appropriate error messages and status codes for bad requests, unauthorized access, and database connection failures.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-2. **Get Ticket Endpoint**
-   - **URL**: `/tickets/<int:ticket_id>`
-   - **Method**: `GET`
-   - **Description**: Retrieves the details of a specific ticket by its ID.
-   - **Error Handling**: Returns appropriate error messages and status codes for ticket not found and database connection failures.
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-3. **Update Ticket Price Endpoint**
-   - **URL**: `/tickets/<int:ticket_id>/price`
-   - **Method**: `PATCH`
-   - **Description**: Updates the selling price of a specific ticket by its ID.
-   - **Error Handling**: Returns appropriate error messages and status codes for bad requests, ticket not found, and database connection failures.
+### `npm test`
 
-4. **Validate Ticket Endpoint**
-   - **URL**: `/tickets/<int:ticket_id>/validate`
-   - **Method**: `PATCH`
-   - **Description**: Updates the validation status of a specific ticket by its ID.
-   - **Error Handling**: Returns appropriate error messages and status codes for bad requests, ticket not found, and database connection failures.
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Enhancements
+### `npm run build`
 
-- **Error Handling**: Custom error handlers for `404 Not Found` and `500 Internal Server Error` have been implemented to provide more user-friendly error messages.
-- **Logging**: Integrated logging to capture and log errors for easier debugging and maintenance.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Database Connection
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-- Utilizes PostgreSQL for database operations.
-- Includes a `get_db_connection` function to handle database connection setup and error handling.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Setup Instructions
+### `npm run eject`
 
-1. **Create `requirements.txt` File**
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-   Ensure the following dependencies are listed in your `requirements.txt` file:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-   ```plaintext
-   Flask
-   psycopg2-binary
-   ```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-2. **Clone the Repository**
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-   ```sh
-   git clone https://github.com/lipikam1110/Tixito-PythonAPIs.git
-   cd Tixito-PythonAPIs
-   ```
+## Learn More
 
-3. **Install Dependencies**
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-   ```sh
-   pip install -r requirements.txt
-   ```
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-4. **Set Up PostgreSQL Database**
+### Code Splitting
 
-   Ensure you have a PostgreSQL database set up with the required schema. Update the database credentials in the `get_db_connection` function in `app.py`.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-5. **Run the Application**
+### Analyzing the Bundle Size
 
-   ```sh
-   python app.py
-   ```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-6. **Use API Endpoints**
+### Making a Progressive Web App
 
-   Test the API endpoints using tools like Postman or Curl.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### How to Test
+### Advanced Configuration
 
-1. **Set up PostgreSQL Database**: Ensure you have a PostgreSQL database set up with the required schema.
-2. **Configure Environment Variables**: Update the database credentials in the `get_db_connection` function.
-3. **Run the Application**: Start the Flask application by running:
-   ```sh
-   python app.py
-   ```
-4. **Use API Endpoints**: Test the API endpoints using tools like Postman or Curl.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Notes
+### Deployment
 
-- Make sure to handle sensitive data appropriately and not to hardcode credentials in the code.
-- Follow the project's contribution guidelines for any further enhancements or bug fixes.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
----
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
